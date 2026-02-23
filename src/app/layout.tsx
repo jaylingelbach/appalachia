@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
+import Navbar from '@/src/app/components/layout/Navbar';
 import './globals.css';
 
 const geistSans = Geist({
@@ -13,6 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? 'https://brownbearcreative.org'
+  ),
   title: {
     default:
       'Brown Bear Creative | Web Design & Development for Small Businesses',
@@ -62,6 +66,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Navbar />
         {children}
       </body>
     </html>
