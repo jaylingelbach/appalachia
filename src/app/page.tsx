@@ -13,13 +13,14 @@ export default function Home() {
     <main>
       <HeroSection />
 
-      <div className="relative bg-[#0a0a0a] overflow-hidden">
+      <div className="relative bg-[#111111] overflow-hidden">
+        <div className="absolute inset-0 bg-white/3 pointer-events-none" />
         {/* Top Seam Blend */}
         <div className="absolute top-0 left-0 w-full h-40 bg-gradient-to-b from-black via-black/80 to-transparent pointer-events-none z-10" />
 
         {/* Cinematic Warm Atmosphere */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_38%,rgba(180,83,42,0.18),rgba(180,83,42,0.07)_55%,transparent_90%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_55%,rgba(180,83,42,0.22),rgba(180,83,42,0.06)_55%,transparent_90%)]" />
         </div>
 
         {/* Mountain Depth */}
