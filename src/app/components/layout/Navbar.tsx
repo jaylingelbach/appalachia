@@ -50,11 +50,14 @@ export default function Navbar() {
         </Link>
         {/* Nav Links */}
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium tracking-wide text-white/80">
-          <Link href="#work" className="hover:text-white transition-colors">
+          <Link href="/#work" className="hover:text-white transition-colors">
             Work
           </Link>
 
-          <Link href="#services" className="hover:text-white transition-colors">
+          <Link
+            href="/#services"
+            className="hover:text-white transition-colors"
+          >
             Services
           </Link>
 

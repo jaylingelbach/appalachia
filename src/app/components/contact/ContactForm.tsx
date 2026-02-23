@@ -5,6 +5,7 @@ import { useState, useRef, useEffect } from 'react';
 export default function ContactForm() {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const successRef = useRef<HTMLDivElement>(null);
 
@@ -17,14 +18,48 @@ export default function ContactForm() {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoading(true);
+    setErrorMsg(null);
+
+    const formData = new FormData(event.currentTarget);
+
+    const payload = {
+      name: String(formData.get('name') ?? ''),
+      email: String(formData.get('email') ?? ''),
+      company: String(formData.get('company') ?? ''),
+      message: String(formData.get('message') ?? '')
+    };
+
+    let controller = new AbortController();
+    let timeoutId = setTimeout(() => controller.abort(), 10_000);
 
     try {
-      // TEMP: fake submit delay
-      await new Promise((resolve) => setTimeout(resolve, 1200));
+      timeoutId = setTimeout(() => controller.abort(), 10_000);
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+        signal: controller.signal
+      });
+
+      if (!response.ok) {
+        const body = await response.json().catch(() => ({}));
+        throw new Error(body?.error ?? 'Submission failed');
+      }
+
       setSubmitted(true);
-    } catch {
-      // TODO: surface an error message to the user
+    } catch (error) {
+      console.error(error);
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        setErrorMsg('Request timed out. Please try again.');
+        return;
+      }
+      const msg =
+        error instanceof Error && error.message !== 'Submission failed'
+          ? error.message
+          : 'Something went wrong. Please try again.';
+      setErrorMsg(msg);
     } finally {
+      clearTimeout(timeoutId);
       setLoading(false);
     }
   }
@@ -80,6 +115,11 @@ export default function ContactForm() {
       >
         {loading ? 'Sending…' : 'Send Message'}
       </button>
+      {errorMsg && (
+        <p role="alert" className="text-red-400 text-sm text-center">
+          {errorMsg}
+        </p>
+      )}
       <p className="sr-only" role="status" aria-live="polite">
         {loading ? 'Sending your message.' : ''}
       </p>
@@ -140,7 +180,7 @@ function Textarea({
         name={name}
         required={required}
         rows={5}
-        className="w-full px-4 py-3 rounded-md bg-black/40 border border-white/10 focus:outline- focus:ring-2 focus:ring-[#B4532A] focus-visible:ring-offset-2 focus-visible:ring-offset-[#111] text-white resize-none"
+        className="w-full px-4 py-3 rounded-md bg-black/40 border border-white/10 focus:outline-hidden focus:ring-2 focus:ring-[#B4532A] focus-visible:ring-offset-2 focus-visible:ring-offset-[#111] text-white resize-none"
       />
     </div>
   );

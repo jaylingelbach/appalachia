@@ -17,7 +17,7 @@ import { Code2, Palette, Gauge } from 'lucide-react';
 
 export default function ServicesSection() {
   return (
-    <section className="relative py-28 text-white">
+    <section id="services" className="relative py-28 text-white">
       <div className="relative max-w-6xl mx-auto px-6">
         {/* Section Header */}
         <div className="flex items-center justify-center gap-6 mb-20">

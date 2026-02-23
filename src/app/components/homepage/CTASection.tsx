@@ -22,7 +22,7 @@ export default function CTASection() {
           transition={{ duration: 0.6 }}
           className="text-4xl md:text-5xl font-semibold tracking-tight"
         >
-          Let’s Build Something Great
+          Let&apos;s Build Something Great
         </motion.h2>
 
         <motion.p
@@ -32,8 +32,8 @@ export default function CTASection() {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="mt-6 text-white/60 text-lg"
         >
-          If you're ready to elevate your online presence, let's talk about your
-          vision.
+          If you&apos;re ready to elevate your online presence, let&apos;s talk
+          about your vision.
         </motion.p>
 
         <motion.div

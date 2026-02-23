@@ -15,8 +15,7 @@ import { portfolioItems } from '@/src/data/portfolio';
 
 export default function PortfolioSection() {
   return (
-    <section className="relative pt-36 pb-28 text-white">
-      git
+    <section id="work" className="relative pt-36 pb-28 text-white">
       <div className="max-w-6xl mx-auto px-6">
         <div className="max-w-3xl mb-20">
           <h2 className="text-4xl md:text-5xl font-semibold tracking-tight">
