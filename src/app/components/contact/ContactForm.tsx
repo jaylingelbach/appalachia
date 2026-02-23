@@ -5,6 +5,7 @@ import { useState, useRef, useEffect } from 'react';
 export default function ContactForm() {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const successRef = useRef<HTMLDivElement>(null);
 
@@ -17,31 +18,37 @@ export default function ContactForm() {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoading(true);
+    setErrorMsg(null);
 
     const formData = new FormData(event.currentTarget);
 
     const payload = {
-      name: formData.get('name'),
-      email: formData.get('email'),
-      company: formData.get('company'),
-      message: formData.get('message')
+      name: formData.get('name') as string,
+      email: formData.get('email') as string,
+      company: (formData.get('company') as string) ?? '',
+      message: formData.get('message') as string
     };
 
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10_000);
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
+        signal: controller.signal
       });
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
-        throw new Error('Submission failed');
+        const body = await response.json().catch(() => ({}));
+        throw new Error(body?.error ?? 'Submission failed');
       }
 
       setSubmitted(true);
     } catch (error) {
       console.error(error);
-      alert('Something went wrong. Please try again.');
+      setErrorMsg('Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -98,6 +105,11 @@ export default function ContactForm() {
       >
         {loading ? 'Sending…' : 'Send Message'}
       </button>
+      {errorMsg && (
+        <p role="alert" className="text-red-400 text-sm text-center">
+          {errorMsg}
+        </p>
+      )}
       <p className="sr-only" role="status" aria-live="polite">
         {loading ? 'Sending your message.' : ''}
       </p>
