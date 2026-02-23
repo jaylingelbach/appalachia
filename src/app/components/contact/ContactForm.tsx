@@ -37,7 +37,6 @@ export default function ContactForm() {
       <div
         className="text-center py-16 border border-white/10 rounded-xl bg-[#111]"
         role="status"
-        aria-live="polite"
         ref={successRef}
         tabIndex={-1}
       >
@@ -144,7 +143,7 @@ function Textarea({
         name={name}
         required={required}
         rows={5}
-        className="w-full px-4 py-3 rounded-md bg-black/40 border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#B4532A] focus-visible:ring-offset-2 focus-visible:ring-offset-[#111] text-white resize-none"
+        className="w-full px-4 py-3 rounded-md bg-black/40 border border-white/10 focus:outline- focus:ring-2 focus:ring-[#B4532A] focus-visible:ring-offset-2 focus-visible:ring-offset-[#111] text-white resize-none"
       />
     </div>
   );
