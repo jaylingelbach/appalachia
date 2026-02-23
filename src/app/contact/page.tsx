@@ -1,4 +1,11 @@
 import ContactForm from '@/src/app/components/contact/ContactForm';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Contact',
+  description:
+    "Let's build something great — reach out to discuss your project."
+};
 
 export default function ContactPage() {
   return (
@@ -12,7 +19,11 @@ export default function ContactPage() {
       {/* Warm Atmosphere */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_20%,rgba(180,83,42,0.18),rgba(180,83,42,0.06)_50%,transparent_85%)] pointer-events-none" />
 
-      <main id="contact-main" className="relative max-w-3xl mx-auto px-6 py-32" tabIndex={-1}>
+      <main
+        id="contact-main"
+        className="relative max-w-3xl mx-auto px-6 py-32"
+        tabIndex={-1}
+      >
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-semibold tracking-tight">
             Let’s Build Something Great

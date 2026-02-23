@@ -1,10 +1,18 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 export default function ContactForm() {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  const successRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (submitted) {
+      successRef.current?.focus();
+    }
+  }, [submitted]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -17,12 +25,20 @@ export default function ContactForm() {
     setSubmitted(true);
   }
 
+  /* Always-present live region – receives the success message */
+  <div aria-live="polite" aria-atomic="true" className="sr-only">
+    {submitted
+      ? "Thanks — I'll be in touch soon. I typically respond within 1–2 business days."
+      : ''}
+  </div>;
+
   if (submitted) {
     return (
       <div
         className="text-center py-16 border border-white/10 rounded-xl bg-[#111]"
         role="status"
         aria-live="polite"
+        ref={successRef}
         tabIndex={-1}
       >
         <h2 className="text-2xl font-semibold mb-4">
@@ -47,8 +63,18 @@ export default function ContactForm() {
         Contact form
       </h2>
       <Input label="Name" name="name" autoComplete="name" required />
-      <Input label="Email" name="email" type="email" autoComplete="email" required />
-      <Input label="Company (Optional)" name="company" autoComplete="organization" />
+      <Input
+        label="Email"
+        name="email"
+        type="email"
+        autoComplete="email"
+        required
+      />
+      <Input
+        label="Company (Optional)"
+        name="company"
+        autoComplete="organization"
+      />
       <Textarea label="Project Details" name="message" required />
 
       <button
@@ -74,7 +100,7 @@ function Input({
 }: {
   label: string;
   name: string;
-  type?: string;
+  type?: React.HTMLInputTypeAttribute;
   autoComplete?: string;
   required?: boolean;
 }) {
@@ -91,7 +117,7 @@ function Input({
         name={name}
         autoComplete={autoComplete}
         required={required}
-        className="w-full px-4 py-3 rounded-md bg-black/40 border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#B4532A] focus-visible:ring-offset-2 focus-visible:ring-offset-[#111] text-white"
+        className="w-full px-4 py-3 rounded-md bg-black/40 border border-white/10 focus:outline-hidden focus:ring-2 focus:ring-[#B4532A] focus-visible:ring-offset-2 focus-visible:ring-offset-[#111] text-white"
       />
     </div>
   );
