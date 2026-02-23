@@ -5,7 +5,7 @@ import ServicesSection from '@/src/app/components/homepage/ServicesSection';
 
 export default function Home() {
   return (
-    <div>
+    <main>
       <HeroSection />
 
       <div className="relative bg-[#0a0a0a] overflow-hidden">
@@ -28,6 +28,6 @@ export default function Home() {
           <CTASection />
         </div>
       </div>
-    </div>
+    </main>
   );
 }

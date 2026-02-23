@@ -1,5 +1,6 @@
 'use client';
 
+import type { ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import { Code2, Palette, Gauge } from 'lucide-react';
 
@@ -50,7 +51,7 @@ export default function ServicesSection() {
 }
 
 type CardProps = {
-  icon: React.ReactNode;
+  icon: ReactNode;
   title: string;
   description: string;
 };

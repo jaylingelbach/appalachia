@@ -13,7 +13,8 @@ export default function Navbar() {
       setScrolled(window.scrollY > 40);
     };
 
-    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -22,7 +23,7 @@ export default function Navbar() {
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className={`top-0 left-0 w-full z-50 transition-all duration-300 ${
+      className={`transition-all duration-300 ${
         scrolled ? 'bg-black/70 backdrop-blur-md py-4' : 'bg-transparent py-6'
       }`}
     >
