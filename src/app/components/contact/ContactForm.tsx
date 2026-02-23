@@ -23,10 +23,10 @@ export default function ContactForm() {
     const formData = new FormData(event.currentTarget);
 
     const payload = {
-      name: formData.get('name') as string,
-      email: formData.get('email') as string,
-      company: (formData.get('company') as string) ?? '',
-      message: formData.get('message') as string
+      name: String(formData.get('name') ?? ''),
+      email: String(formData.get('email') ?? ''),
+      company: String(formData.get('company') ?? ''),
+      message: String(formData.get('message') ?? '')
     };
 
     try {
@@ -48,6 +48,10 @@ export default function ContactForm() {
       setSubmitted(true);
     } catch (error) {
       console.error(error);
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        setErrorMsg('Request timed out. Please try again.');
+        return;
+      }
       const msg =
         error instanceof Error && error.message !== 'Submission failed'
           ? error.message
