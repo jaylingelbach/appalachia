@@ -18,12 +18,30 @@ export default function ContactForm() {
     event.preventDefault();
     setLoading(true);
 
+    const formData = new FormData(event.currentTarget);
+
+    const payload = {
+      name: formData.get('name'),
+      email: formData.get('email'),
+      company: formData.get('company'),
+      message: formData.get('message')
+    };
+
     try {
-      // TEMP: fake submit delay
-      await new Promise((resolve) => setTimeout(resolve, 1200));
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        throw new Error('Submission failed');
+      }
+
       setSubmitted(true);
-    } catch {
-      // TODO: surface an error message to the user
+    } catch (error) {
+      console.error(error);
+      alert('Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }
