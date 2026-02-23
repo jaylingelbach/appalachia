@@ -20,7 +20,7 @@ export default function Home() {
 
         {/* Cinematic Warm Atmosphere */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_38%,rgba(180,83,42,0.24),rgba(180,83,42,0.07)_55%,transparent_90%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_55%,rgba(180,83,42,0.22),rgba(180,83,42,0.06)_55%,transparent_90%)]" />
         </div>
 
         {/* Mountain Depth */}
