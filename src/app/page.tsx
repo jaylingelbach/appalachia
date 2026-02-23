@@ -3,6 +3,11 @@ import HeroSection from '@/src/app/components/homepage/HeroSection';
 import PortfolioSection from '@/src/app/components/homepage/PortfolioSection';
 import ServicesSection from '@/src/app/components/homepage/ServicesSection';
 
+/**
+ * Renders the homepage composed of a hero section followed by a decorative dark background with layered gradients and the portfolio, services, and CTA sections.
+ *
+ * @returns The React element for the site's main page layout.
+ */
 export default function Home() {
   return (
     <main>

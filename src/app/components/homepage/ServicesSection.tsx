@@ -5,11 +5,14 @@ import { motion } from 'framer-motion';
 import { Code2, Palette, Gauge } from 'lucide-react';
 
 /**
- * ServicesSection
+ * Render the "Our Services" section containing three interactive service cards.
  *
- * IMPORTANT:
- * This section intentionally has NO background layers.
- * It inherits its atmospheric styling from the parent wrapper.
+ * This section provides a centered header and a responsive three-column grid of
+ * service cards (Web Design, Development, SEO & Performance). It intentionally
+ * defines no background layers and inherits atmospheric styling from its parent
+ * wrapper.
+ *
+ * @returns A JSX element representing the services section
  */
 
 export default function ServicesSection() {
@@ -56,6 +59,14 @@ type CardProps = {
   description: string;
 };
 
+/**
+ * Renders a service card displaying an icon, title, and description with hover elevation and an inner glow.
+ *
+ * @param icon - The visual icon element shown above the title.
+ * @param title - The card's heading text.
+ * @param description - The card's descriptive copy shown below the title.
+ * @returns The JSX element for the styled, animated service card.
+ */
 function ServiceCard({ icon, title, description }: CardProps) {
   return (
     <motion.div

@@ -5,6 +5,15 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 
+/**
+ * Top navigation bar that animates into view and switches styling when the page is scrolled.
+ *
+ * Renders the site's header containing the logo and primary navigation links; the header
+ * applies an entrance animation and toggles between transparent and translucent backgrounds
+ * based on the vertical scroll position (threshold: 40px).
+ *
+ * @returns A React header element with logo and navigation links, styled and animated for the top of the page.
+ */
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
 

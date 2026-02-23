@@ -2,11 +2,15 @@ import PortfolioItem from './PortfolioItem';
 import { portfolioItems } from '@/src/data/portfolio';
 
 /**
- * PortfolioSection
+ * Renders the "Selected Work" portfolio section.
  *
- * IMPORTANT:
- * No background color here.
- * This section inherits the shared atmospheric wrapper.
+ * Displays a header with a title and description, then renders all portfolio
+ * items in sequence, alternating item layout based on their index.
+ *
+ * Important: do not apply a background color to this section — it inherits the
+ * surrounding atmospheric wrapper.
+ *
+ * @returns The rendered section element containing the portfolio content.
  */
 
 export default function PortfolioSection() {
