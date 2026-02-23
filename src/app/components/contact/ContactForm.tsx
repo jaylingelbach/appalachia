@@ -29,16 +29,17 @@ export default function ContactForm() {
       message: String(formData.get('message') ?? '')
     };
 
+    let controller = new AbortController();
+    let timeoutId = setTimeout(() => controller.abort(), 10_000);
+
     try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10_000);
+      timeoutId = setTimeout(() => controller.abort(), 10_000);
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
         signal: controller.signal
       });
-      clearTimeout(timeoutId);
 
       if (!response.ok) {
         const body = await response.json().catch(() => ({}));
@@ -58,6 +59,7 @@ export default function ContactForm() {
           : 'Something went wrong. Please try again.';
       setErrorMsg(msg);
     } finally {
+      clearTimeout(timeoutId);
       setLoading(false);
     }
   }
