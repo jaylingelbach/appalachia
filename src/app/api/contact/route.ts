@@ -102,14 +102,14 @@ export async function POST(request: Request) {
           <p>${safeMessageHtml}</p>
         `,
         TextBody: `
-New Inquiry
+        New Inquiry
 
-Name: ${name}
-Email: ${email}
-Company: ${company ?? 'N/A'}
+        Name: ${name}
+        Email: ${email}
+        Company: ${company ?? 'N/A'}
 
-Message:
-${safeMessageText}
+        Message:
+        ${safeMessageText}
         `
       }),
 
@@ -126,14 +126,14 @@ ${safeMessageText}
           <p>– Jay</p>
         `,
         TextBody: `
-Hey ${name},
+        Hey ${name},
 
-Thanks for reaching out to Brown Bear Creative.
+        Thanks for reaching out to Brown Bear Creative.
 
-I’ve received your message and will get back to you within 1–2 business days.
+        I’ve received your message and will get back to you within 1–2 business days.
 
-– Jay
-        `
+        – Jay
+                `
       })
     ]);
 
@@ -144,7 +144,7 @@ I’ve received your message and will get back to you within 1–2 business days
     }
 
     if (userResult.status === 'rejected') {
-      console.error('Confirmation email failed for:', email, userResult.reason);
+      console.error('Confirmation email failed for:', userResult.reason);
     }
 
     // We consider the request successful if the internal email succeeds.
@@ -158,7 +158,8 @@ I’ve received your message and will get back to you within 1–2 business days
       { status: 500 }
     );
   } catch (error) {
-    console.error('Contact form error:', error);
+    const message = error instanceof Error ? error.message : String(error);
+    console.error('Contact form error:', message);
     return NextResponse.json(
       { success: false, error: 'Server error. Please try again later.' },
       { status: 500 }
