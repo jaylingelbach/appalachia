@@ -30,7 +30,7 @@ const client = new postmark.ServerClient(POSTMARK_SERVER_TOKEN);
 
 const contactSchema = z.object({
   name: z.string().trim().min(2).max(100),
-  email: z.email().trim().max(254),
+  email: z.string().trim().max(254).pipe(z.email()),
   company: z.string().trim().max(200).optional(),
   message: z.string().trim().min(10).max(5000)
 });
@@ -79,14 +79,14 @@ export async function POST(request: Request) {
 
   const { name, email, company, message } = parsed.data;
 
-  // Escape user input
   const safeName = escapeHtml(name);
   const safeEmail = escapeHtml(email);
   const safeCompany = company ? escapeHtml(company) : 'N/A';
-  const safeMessage = escapeHtml(message).replace(/\n/g, '<br />');
+  const safeMessageHtml = escapeHtml(message).replace(/\n/g, '<br />');
+  const safeMessageText = message; // already validated + trimmed
 
   try {
-    await Promise.all([
+    const results = await Promise.allSettled([
       // Internal notification
       client.sendEmail({
         From: CONTACT_FROM,
@@ -99,7 +99,17 @@ export async function POST(request: Request) {
           <p><strong>Email:</strong> ${safeEmail}</p>
           <p><strong>Company:</strong> ${safeCompany}</p>
           <p><strong>Message:</strong></p>
-          <p>${safeMessage}</p>
+          <p>${safeMessageHtml}</p>
+        `,
+        TextBody: `
+New Inquiry
+
+Name: ${name}
+Email: ${email}
+Company: ${company ?? 'N/A'}
+
+Message:
+${safeMessageText}
         `
       }),
 
@@ -114,17 +124,41 @@ export async function POST(request: Request) {
           <p>I’ve received your message and will get back to you within 1–2 business days.</p>
           <br />
           <p>– Jay</p>
+        `,
+        TextBody: `
+Hey ${name},
+
+Thanks for reaching out to Brown Bear Creative.
+
+I’ve received your message and will get back to you within 1–2 business days.
+
+– Jay
         `
       })
     ]);
 
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error(
-      'Contact form error:',
-      error instanceof Error ? error.message : String(error)
-    );
+    const [adminResult, userResult] = results;
 
+    if (adminResult.status === 'rejected') {
+      console.error('Admin email failed:', adminResult.reason);
+    }
+
+    if (userResult.status === 'rejected') {
+      console.error('Confirmation email failed for:', email, userResult.reason);
+    }
+
+    // We consider the request successful if the internal email succeeds.
+    if (adminResult.status === 'fulfilled') {
+      return NextResponse.json({ success: true });
+    }
+
+    // If internal notification fails, treat as server error
+    return NextResponse.json(
+      { success: false, error: 'Failed to send message.' },
+      { status: 500 }
+    );
+  } catch (error) {
+    console.error('Contact form error:', error);
     return NextResponse.json(
       { success: false, error: 'Server error. Please try again later.' },
       { status: 500 }
