@@ -18,11 +18,15 @@ export default function ContactForm() {
     event.preventDefault();
     setLoading(true);
 
-    // TEMP: fake submit delay
-    await new Promise((resolve) => setTimeout(resolve, 1200));
-
-    setLoading(false);
-    setSubmitted(true);
+    try {
+      // TEMP: fake submit delay
+      await new Promise((resolve) => setTimeout(resolve, 1200));
+      setSubmitted(true);
+    } catch {
+      // TODO: surface an error message to the user
+    } finally {
+      setLoading(false);
+    }
   }
 
   /* Always-present live region – receives the success message */
