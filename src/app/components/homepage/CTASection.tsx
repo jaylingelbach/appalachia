@@ -4,11 +4,11 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 
 /**
- * CTASection
+ * Render a centered call-to-action section with animated heading, supporting text, and a prominent "Get In Touch" button.
  *
- * IMPORTANT:
- * This section also has NO background layers.
- * It relies entirely on the shared atmospheric wrapper.
+ * The section uses framer-motion entrance animations for the heading, paragraph, and CTA container, and relies on the surrounding layout for background/atmosphere (it includes no background layers itself). The CTA navigates to `/contact`.
+ *
+ * @returns The CTA section element containing the animated heading, description, and link-styled button
  */
 
 export default function CTASection() {
