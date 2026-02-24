@@ -12,7 +12,7 @@ export const portfolioItems: PortfolioItem[] = [
     title: 'Sweetwater',
     role: 'Frontend Engineer',
     description:
-      'Contributed to frontend development for one of the largest online music retailers in the U.S., collaborating within a large engineering team to deliver performant and accessible UI at scale.',
+      'Contributed to frontend development for one of the largest online music retailers in the U.S., collaborated within a large engineering team to deliver performant and accessible UI at scale.',
     highlights: [
       'Large-scale UI systems',
       'Performance optimization',
