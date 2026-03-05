@@ -39,7 +39,7 @@ export default function HeroSection() {
 
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
             <Link
-              href="/work"
+              href="/#work"
               className="px-8 py-4 rounded-md font-medium text-white bg-[#B4532A] hover:bg-[#9e4623] transition-colors duration-300"
             >
               View Our Work
