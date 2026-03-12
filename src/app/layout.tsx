@@ -19,30 +19,29 @@ export const metadata: Metadata = {
   ),
   title: {
     default:
-      'Brown Bear Creative | Web Design & Development for Small Businesses',
-    template: '%s | Brown Bear Creative'
+      'Brown Bear Web Co. | Web Design & Development for Small Businesses',
+    template: '%s | Brown Bear Web Co.'
   },
 
   description:
-    'Brown Bear Creative is a modern web design and development studio building high-performing websites for ambitious small businesses.',
+    'Brown Bear Web Co. is a modern web design and development studio building high-performing websites for ambitious small businesses.',
   keywords: [
     'Modern web design',
     'Remote web development studio',
     'High performance websites',
     'Next.js developer',
     'Small business website design',
-    'Brown Bear Creative',
-    'Brown Bear Creative'
+    'Brown Bear Web Co.'
   ],
   icons: {
     icon: '/icon.svg'
   },
   openGraph: {
-    title: 'Brown Bear Creative | Web Design & Development',
+    title: 'Brown Bear Web Co. | Web Design & Development',
     description:
       'Modern, high-performing websites built for small businesses. Based in the St. Louis area.',
     url: 'https://brownbearcreative.org',
-    siteName: 'Brown Bear Creative',
+    siteName: 'Brown Bear Web Co.',
     locale: 'en_US',
     type: 'website',
     images: [
@@ -50,7 +49,7 @@ export const metadata: Metadata = {
         url: '/hero-bg.png',
         width: 1200,
         height: 630,
-        alt: 'Brown Bear Creative'
+        alt: 'Brown Bear Web Co.'
       }
     ]
   }

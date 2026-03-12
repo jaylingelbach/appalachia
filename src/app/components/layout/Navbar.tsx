@@ -41,7 +41,7 @@ export default function Navbar() {
         <Link href="/" className="flex items-center">
           <Image
             src="/logo-light.svg"
-            alt="Brown Bear Creative"
+            alt="Brown Bear Web Co."
             width={160}
             height={40}
             className="h-8 w-auto"

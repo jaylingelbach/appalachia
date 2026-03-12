@@ -10,7 +10,7 @@ export const size = {
 export const contentType = 'image/png';
 
 /**
- * Generates the Open Graph image for the Brown Bear Creative brand.
+ * Generates the Open Graph image for the Brown Bear Web Co. brand.
  *
  * @returns An ImageResponse containing the rendered 1200×630 PNG image for use in social previews.
  */
@@ -39,7 +39,7 @@ export default function Image() {
           lineHeight: 1.1
         }}
       >
-        Brown Bear Creative
+        Brown Bear Web Co.
       </div>
 
       {/* Subtitle */}

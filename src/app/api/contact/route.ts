@@ -117,10 +117,10 @@ export async function POST(request: Request) {
       client.sendEmail({
         From: CONTACT_FROM,
         To: email,
-        Subject: `Thanks for reaching out — Brown Bear Creative`,
+        Subject: `Thanks for reaching out — Brown Bear Web Co.`,
         HtmlBody: `
           <h2>Hey ${safeName},</h2>
-          <p>Thanks for reaching out to Brown Bear Creative.</p>
+          <p>Thanks for reaching out to Brown Bear Web Co.</p>
           <p>I’ve received your message and will get back to you within 1–2 business days.</p>
           <br />
           <p>– Jay</p>
@@ -128,7 +128,7 @@ export async function POST(request: Request) {
         TextBody: `
         Hey ${name},
 
-        Thanks for reaching out to Brown Bear Creative.
+        Thanks for reaching out to Brown Bear Web Co.
 
         I’ve received your message and will get back to you within 1–2 business days.
 
