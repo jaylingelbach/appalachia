@@ -110,7 +110,7 @@ export default function ContactForm() {
 
       <button
         type="submit"
-        disabled={loading}
+        disabled={true}
         className="w-full py-4 rounded-lg bg-[#B4532A] hover:bg-[#9e4623] transition-colors font-medium disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e07a4d] focus-visible:ring-offset-2 focus-visible:ring-offset-[#111]"
       >
         {loading ? 'Sending…' : 'Send Message'}
