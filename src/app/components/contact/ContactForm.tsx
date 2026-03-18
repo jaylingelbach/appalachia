@@ -26,7 +26,9 @@ export default function ContactForm() {
       name: String(formData.get('name') ?? ''),
       email: String(formData.get('email') ?? ''),
       company: String(formData.get('company') ?? ''),
-      message: String(formData.get('message') ?? '')
+      message: String(formData.get('message') ?? ''),
+      website: String(formData.get('website') ?? ''),
+      formStartTime: Number(formData.get('formStartTime') ?? 0)
     };
 
     let controller = new AbortController();
@@ -93,6 +95,14 @@ export default function ContactForm() {
       <h2 id="contact-form-title" className="sr-only">
         Contact form
       </h2>
+      <input
+        type="text"
+        name="website"
+        tabIndex={-1}
+        autoComplete="off"
+        className="hidden"
+      />
+      <input type="hidden" name="formStartTime" value={Date.now()} />
       <Input label="Name" name="name" autoComplete="name" required />
       <Input
         label="Email"
@@ -110,7 +120,7 @@ export default function ContactForm() {
 
       <button
         type="submit"
-        disabled={true}
+        disabled={loading}
         className="w-full py-4 rounded-lg bg-[#B4532A] hover:bg-[#9e4623] transition-colors font-medium disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e07a4d] focus-visible:ring-offset-2 focus-visible:ring-offset-[#111]"
       >
         {loading ? 'Sending…' : 'Send Message'}
