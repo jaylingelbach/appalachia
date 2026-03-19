@@ -30,6 +30,15 @@ const client = new postmark.ServerClient(POSTMARK_SERVER_TOKEN);
 
 const rateLimitMap = new Map<string, { count: number; timestamp: number }>();
 
+function cleanupRateLimitMap() {
+  const now = Date.now();
+  for (const [ip, record] of rateLimitMap) {
+    if (now - record.timestamp >= 60_000) {
+      rateLimitMap.delete(ip);
+    }
+  }
+}
+
 /* -------------------------------------------------------------------------- */
 /*                                Validation Schema                           */
 /* -------------------------------------------------------------------------- */
@@ -98,10 +107,14 @@ export async function POST(request: Request) {
   const currentTime = Date.now();
   const windowMs = 60_000;
   const maxRequests = 5;
-
+  let recordCount = 0;
   const record = rateLimitMap.get(ip);
 
   if (record) {
+    recordCount++;
+    if (recordCount > 99) {
+      cleanupRateLimitMap();
+    }
     if (currentTime - record.timestamp < windowMs) {
       if (record.count >= maxRequests) {
         return NextResponse.json(
