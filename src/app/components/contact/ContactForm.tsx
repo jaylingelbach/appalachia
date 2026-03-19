@@ -6,6 +6,7 @@ export default function ContactForm() {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [formStartTime] = useState(() => Date.now());
 
   const successRef = useRef<HTMLDivElement>(null);
 
@@ -102,7 +103,7 @@ export default function ContactForm() {
         autoComplete="off"
         className="hidden"
       />
-      <input type="hidden" name="formStartTime" value={Date.now()} />
+      <input type="hidden" name="formStartTime" value={formStartTime} />
       <Input label="Name" name="name" autoComplete="name" required />
       <Input
         label="Email"
