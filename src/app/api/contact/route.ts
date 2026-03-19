@@ -25,6 +25,21 @@ const CONTACT_TO = process.env.CONTACT_TO!;
 const client = new postmark.ServerClient(POSTMARK_SERVER_TOKEN);
 
 /* -------------------------------------------------------------------------- */
+/*                                Rate Limiter                                */
+/* -------------------------------------------------------------------------- */
+
+const rateLimitMap = new Map<string, { count: number; timestamp: number }>();
+
+function cleanupRateLimitMap() {
+  const now = Date.now();
+  for (const [ip, record] of rateLimitMap) {
+    if (now - record.timestamp >= 60_000) {
+      rateLimitMap.delete(ip);
+    }
+  }
+}
+
+/* -------------------------------------------------------------------------- */
 /*                                Validation Schema                           */
 /* -------------------------------------------------------------------------- */
 
@@ -36,7 +51,7 @@ const contactSchema = z.object({
 });
 
 /* -------------------------------------------------------------------------- */
-/*                          HTML Escaping Helper (Security)                   */
+/*                          HTML Escaping Helper                              */
 /* -------------------------------------------------------------------------- */
 
 function escapeHtml(value: string): string {
@@ -53,10 +68,10 @@ function escapeHtml(value: string): string {
 /* -------------------------------------------------------------------------- */
 
 export async function POST(request: Request) {
-  let body: unknown;
+  let rawBody: unknown;
 
   try {
-    body = await request.json();
+    rawBody = await request.json();
   } catch {
     return NextResponse.json(
       { success: false, error: 'Invalid JSON body.' },
@@ -64,7 +79,59 @@ export async function POST(request: Request) {
     );
   }
 
-  const parsed = contactSchema.safeParse(body);
+  /* -------------------------- Honeypot check -------------------------- */
+  if (typeof rawBody === 'object' && rawBody !== null && 'website' in rawBody) {
+    const website = (rawBody as Record<string, unknown>).website;
+
+    if (typeof website === 'string' && website.length > 0) {
+      return NextResponse.json({ success: true });
+    }
+  }
+
+  /* -------------------------- Timing check ---------------------------- */
+  const started = Number(
+    (rawBody as Record<string, unknown>).formStartTime ?? 0
+  );
+  const now = Date.now();
+
+  if (!started || now - started < 3000) {
+    return NextResponse.json({ success: true });
+  }
+
+  /* -------------------------- Rate limiting --------------------------- */
+  const ip =
+    request.headers.get('x-forwarded-for') ??
+    request.headers.get('x-real-ip') ??
+    'unknown';
+
+  const currentTime = Date.now();
+  const windowMs = 60_000;
+  const maxRequests = 5;
+  let recordCount = 0;
+  const record = rateLimitMap.get(ip);
+
+  if (record) {
+    recordCount++;
+    if (recordCount > 99) {
+      cleanupRateLimitMap();
+    }
+    if (currentTime - record.timestamp < windowMs) {
+      if (record.count >= maxRequests) {
+        return NextResponse.json(
+          { success: false, error: 'Too many requests' },
+          { status: 429 }
+        );
+      }
+      record.count += 1;
+    } else {
+      rateLimitMap.set(ip, { count: 1, timestamp: currentTime });
+    }
+  } else {
+    rateLimitMap.set(ip, { count: 1, timestamp: currentTime });
+  }
+
+  /* -------------------------- Validation ------------------------------ */
+  const parsed = contactSchema.safeParse(rawBody);
 
   if (!parsed.success) {
     return NextResponse.json(
@@ -79,12 +146,14 @@ export async function POST(request: Request) {
 
   const { name, email, company, message } = parsed.data;
 
+  /* -------------------------- Sanitization ---------------------------- */
   const safeName = escapeHtml(name);
   const safeEmail = escapeHtml(email);
   const safeCompany = company ? escapeHtml(company) : 'N/A';
   const safeMessageHtml = escapeHtml(message).replace(/\n/g, '<br />');
-  const safeMessageText = message; // already validated + trimmed
+  const safeMessageText = message;
 
+  /* -------------------------- Email sending --------------------------- */
   try {
     const results = await Promise.allSettled([
       // Internal notification
@@ -102,14 +171,14 @@ export async function POST(request: Request) {
           <p>${safeMessageHtml}</p>
         `,
         TextBody: `
-        New Inquiry
+New Inquiry
 
-        Name: ${name}
-        Email: ${email}
-        Company: ${company ?? 'N/A'}
+Name: ${name}
+Email: ${email}
+Company: ${company ?? 'N/A'}
 
-        Message:
-        ${safeMessageText}
+Message:
+${safeMessageText}
         `
       }),
 
@@ -126,14 +195,14 @@ export async function POST(request: Request) {
           <p>– Jay</p>
         `,
         TextBody: `
-        Hey ${name},
+Hey ${name},
 
-        Thanks for reaching out to Brown Bear Web Co.
+Thanks for reaching out to Brown Bear Web Co.
 
-        I’ve received your message and will get back to you within 1–2 business days.
+I’ve received your message and will get back to you within 1–2 business days.
 
-        – Jay
-                `
+– Jay
+        `
       })
     ]);
 
@@ -144,22 +213,19 @@ export async function POST(request: Request) {
     }
 
     if (userResult.status === 'rejected') {
-      console.error('Confirmation email failed for:', userResult.reason);
+      console.error('Confirmation email failed:', userResult.reason);
     }
 
-    // We consider the request successful if the internal email succeeds.
     if (adminResult.status === 'fulfilled') {
       return NextResponse.json({ success: true });
     }
 
-    // If internal notification fails, treat as server error
     return NextResponse.json(
       { success: false, error: 'Failed to send message.' },
       { status: 500 }
     );
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    console.error('Contact form error:', message);
+    console.error('Contact form error:', error);
     return NextResponse.json(
       { success: false, error: 'Server error. Please try again later.' },
       { status: 500 }
