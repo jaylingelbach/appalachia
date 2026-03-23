@@ -1,0 +1,26 @@
+{
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "brownbearcreative.org"
+        }
+      ],
+      "destination": "https://brownbearwebco.com/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.brownbearcreative.org"
+        }
+      ],
+      "destination": "https://brownbearwebco.com/$1",
+      "permanent": true
+    }
+  ]
+}
